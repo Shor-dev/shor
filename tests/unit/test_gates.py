@@ -145,3 +145,12 @@ def test_swap_matrix():
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
     assert np.array_equal(g.to_matrix(), np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]))
+
+def test_Cz_matrix():
+    from shor.gates import Cz
+    g = Cz(0,1)
+
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.array_equal(g.to_matrix(), np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0,1, 0], [0, 0, 0, -1]]))
+

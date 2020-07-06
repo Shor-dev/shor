@@ -1,4 +1,4 @@
-from shor.gates import CNOT, Hadamard
+from shor.gates import CNOT, Hadamard,Cz
 from shor.layers import Qubits
 from shor.operations import Measure
 from shor.quantum import Circuit
@@ -96,3 +96,18 @@ def test_multi_hadamard():
     assert len(result.counts) == 16
     assert max(result.counts.values()) - min(result.counts.values()) < 50
 
+def test_Cz_int():
+    circuit = Circuit()
+    circuit.add(Qubits(2))
+    circuit.add(Hadamard(0))
+    circuit.add(Hadamard(1))
+    circuit.add(Cz(0,1))
+    circuit.add(Measure(0,1))
+
+    sess = QSession(backend=QuantumSimulator())
+    result = sess.run(circuit, num_shots=1000)
+
+    assert result['00'] > 210
+    assert result['01'] > 210
+    assert result['10'] > 210
+    assert result['11'] > 210

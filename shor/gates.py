@@ -166,6 +166,16 @@ class SWAP(_Gate):
     def to_matrix() -> np.ndarray:
         return np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
 
+class Cz(_Gate):
+    def __init__(self,*qubits,**kwargs):
+        kwargs['dimension'] = 2
+        if not qubits:
+            qubits = [0,1]
+
+        super().__init__(*qubits,**kwargs)
+    @staticmethod
+    def to_matrix() -> np.ndarray:
+        return np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, -1]])
 
 # Aliases
 H = h = Hadamard
