@@ -75,6 +75,20 @@ def test_rx():
     ]))
 
 
+def test_ry():
+    from shor.gates import Ry
+    angle = math.pi / 8
+    g = Ry(0, angle=math.pi / 8)
+
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+
+    assert np.array_equal(g.to_matrix(), np.array([
+        [math.cos(angle / 2), -math.sin(angle / 2) ],
+        [math.sin(angle / 2), math.cos(angle / 2)]
+    ]))
+
+
 def test_cnot_matrix():
     from shor.gates import CNOT
     g = CNOT()
