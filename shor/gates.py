@@ -154,6 +154,18 @@ class Rx(_Gate):
     ])
 
 
+
+class Rz(_Gate):
+    def __init__(self,*qubits,angle,**kwargs):
+        self.angle = angle
+        kwargs['dimension'] = 1
+        if not qubits:
+            qubits = [0]
+        super().__init__(*qubits,**kwargs)
+    def to_matrix(self) -> np.ndarray:
+        return np.array([[1, 0],[0,np.exp(1j*self.angle)]], dtype='complex')
+
+
 class SWAP(_Gate):
     def __init__(self, *qubits, **kwargs):
         kwargs['dimension'] = 2
@@ -165,6 +177,8 @@ class SWAP(_Gate):
     @staticmethod
     def to_matrix() -> np.ndarray:
         return np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
+
+
 
 
 # Aliases
