@@ -148,13 +148,13 @@ def test_swap_matrix():
 
 
 def test_u3_matrix():
-    from shor.gates import U3,Rx
+    from shor.gates import U3
     theta = np.pi/2
     phi = -np.pi/2
     alpha = np.pi/2
     
     g = U3(0,theta = np.pi/2,phi = -np.pi/2, alpha = np.pi/2)
-    g2 = Rx(0,theta = np.pi/2)
+    
     
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
