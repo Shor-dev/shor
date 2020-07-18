@@ -167,6 +167,25 @@ class SWAP(_Gate):
         return np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
 
 
+class U3(_Gate):
+    def __init__(self, *qubits, theta,phi,alpha, **kwargs):
+        kwargs['dimension'] = 1
+        self.theta=theta
+        self.phi=phi
+        self.alpha=alpha
+        if not qubits:
+            qubits = [0]
+
+        super().__init__(*qubits, **kwargs)
+
+    def to_matrix(self) -> np.ndarray:
+        return np.array([
+        [math.cos(self.theta/2), -np.exp(1j*self.alpha)*math.sin(self.theta/2)],
+        [np.exp(1j*self.phi)*math.sin(self.theta / 2), np.exp(1j*(self.phi+self.alpha))*math.cos(self.theta / 2)]
+    ])
+
+
+
 # Aliases
 H = h = Hadamard
 X = x = PauliX

@@ -145,3 +145,45 @@ def test_swap_matrix():
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
     assert np.array_equal(g.to_matrix(), np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]))
+
+
+def test_u3_matrix():
+    from shor.gates import U3,Rx
+    theta = np.pi/2
+    phi = -np.pi/2
+    alpha = np.pi/2
+    
+    g = U3(0,theta = np.pi/2,phi = -np.pi/2, alpha = np.pi/2)
+    g2 = Rx(0,theta = np.pi/2)
+    
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.array_equal(g.to_matrix(),np.array([[np.cos(theta/2),-np.exp(1j*alpha)*math.sin(theta/2)],[np.exp(1j*phi)*math.sin(theta/2),np.exp(1j*(phi+alpha))*math.cos(theta/2)]]))
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
