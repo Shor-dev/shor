@@ -14,7 +14,7 @@ import math
 import numpy as np
 
 
-def test_U3():
+def test_U3_int():
     circuit_1 = Circuit()
     circuit_1.add(Qubits(1))
     circuit_1.add(U3(0,theta = np.pi/2,phi = -np.pi/2,alpha = np.pi/2))
