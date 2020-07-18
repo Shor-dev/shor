@@ -186,19 +186,14 @@ class U3(_Gate):
     
 
 class U2(_Gate):
-    from shor.gates import U3
     def __init__(self, *qubits, phi, alpha, **kwargs):
-        kwargs['dimension'] = 1
-        self.phi=phi
-        self.alpha=alpha
-        if not qubits:
-            qubits = [0]
-
-        super().__init__(*qubits, **kwargs)
-
-    def to_matrix(self,phi,alpha) -> np.ndarray:
-        return U3(0,theta = np.pi/2,phi=self.phi, alpha=self.alpha)
-
+        self.phi = phi
+        self.alpha = alpha
+        theta = np.pi/2
+        self.U3_class = U3(0,theta,self.phi,self.alpha)
+    
+    def to_matrix(self) -> np.ndarray:
+        return self.U3_class()
 
 
 # Aliases

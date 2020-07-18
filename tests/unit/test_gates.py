@@ -165,7 +165,7 @@ def test_u2_matrix():
     from shor.gates import U2
     phi = -np.pi/3
     alpha = np.pi/2
-    
+    theta = np.pi/2
     g = U2(0,phi = -np.pi/3, alpha = np.pi/2)
     
     
