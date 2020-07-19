@@ -193,7 +193,7 @@ class U2(_Gate):
         self.U3_class = U3(0,theta,self.phi,self.alpha)
     
     def to_matrix(self) -> np.ndarray:
-        return self.U3_class()
+        return self.U3_class.to_matrix()
 
 
 # Aliases
