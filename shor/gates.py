@@ -168,11 +168,12 @@ class SWAP(_Gate):
 
 
 class U3(_Gate):
-    def __init__(self, *qubits, theta,phi,alpha, **kwargs):
+    def __init__(self, *qubits, theta=0, phi=0, alpha=0,**kwargs):
         kwargs['dimension'] = 1
         self.theta=theta
         self.phi=phi
         self.alpha=alpha
+        
         if not qubits:
             qubits = [0]
 
@@ -186,14 +187,12 @@ class U3(_Gate):
     
 
 class U2(_Gate):
-    def __init__(self, *qubits, phi, alpha, **kwargs):
-        self.phi = phi
-        self.alpha = alpha
-        theta = np.pi/2
-        self.U3_class = U3(0,theta,self.phi,self.alpha)
-    
+    def __init__(self, *qubits, **kwargs):
+        self.U3 = U3(0,theta = np.pi/2,**kwargs)
+        super().__init__(*qubits, **kwargs)
+
     def to_matrix(self) -> np.ndarray:
-        return self.U3_class.to_matrix()
+        return self.U3.to_matrix()
 
 
 # Aliases

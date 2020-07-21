@@ -166,13 +166,13 @@ def test_u2_matrix():
     phi = -np.pi/3
     alpha = np.pi/2
     theta = np.pi/2
-    g = U2(0,phi = -np.pi/3, alpha = np.pi/2)
     
+    g = U2(0,phi = -np.pi/3, alpha = np.pi/2)
     
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
-    assert np.array_equal(g.to_matrix(),(1/np.sqrt(2))*np.array([[1,-np.exp(1j*alpha)],[np.exp(1j*phi),np.exp(1j*(phi+alpha))]]))
-    
+    assert np.array_equal(g.to_matrix(),np.array([[np.cos(theta/2),-np.exp(1j*alpha)*math.sin(theta/2)],[np.exp(1j*phi)*math.sin(theta/2),np.exp(1j*(phi+alpha))*math.cos(theta/2)]]))
+    assert np.allclose(g.to_matrix(),(1/np.sqrt(2))*np.array([[1,-np.exp(1j*alpha)],[np.exp(1j*phi),np.exp(1j*(phi+alpha))]]))
 
 
 
