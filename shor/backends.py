@@ -88,7 +88,9 @@ class QuantumSimulator(_QuantumBackend):
         state_vector = get_entangled_initial_state(initial_state, new_qubit_order)
 
         probabilities = np.square(combined.matrix.dot(state_vector))
-
+        probabilities = np.square(combined.matrix.dot(state_vector)).real
+        probabilities = probabilities/np.sum(probabilities)
+        assert np.sum(probabilities) == 1
         return np.random.choice(state_vector.shape[0], p=probabilities)
 
 
