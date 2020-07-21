@@ -145,3 +145,18 @@ def test_swap_matrix():
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
     assert np.array_equal(g.to_matrix(), np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]))
+
+
+def test_u1_matrix():
+    from shor.gates import U1
+    angle = math.pi / 8
+    g = U1(0, angle=math.pi / 8)
+
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.array_equal(g.to_matrix(), np.array([
+        [1, 0],
+        [0, np.exp(1j*angle)]]))
+
+    
+    

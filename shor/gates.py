@@ -167,6 +167,22 @@ class SWAP(_Gate):
         return np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
 
 
+class U1(_Gate):
+    def __init__(self, *qubits, angle=0, **kwargs):
+        kwargs['dimension'] = 1
+        self.angle=angle
+        if not qubits:
+            qubits = [0]
+
+        super().__init__(*qubits, **kwargs)
+
+    def to_matrix(self) -> np.ndarray:
+        return np.array([
+        [1, 0],
+        [0, np.exp(1j*self.angle)]
+    ])
+
+
 # Aliases
 H = h = Hadamard
 X = x = PauliX
