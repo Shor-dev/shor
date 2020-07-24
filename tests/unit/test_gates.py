@@ -145,3 +145,43 @@ def test_swap_matrix():
     assert is_square(g.to_matrix())
     assert is_unitary(g.to_matrix())
     assert np.array_equal(g.to_matrix(), np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]))
+
+
+def test_s_matrix():
+    from shor.gates import S
+    g = S(0)
+
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.array_equal(g.to_matrix(), np.array([[1,0], [0, 1j]]))
+
+
+def test_sdg_matrix():
+    from shor.gates import Sdg
+    g = Sdg(0)
+
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.array_equal(g.to_matrix(), np.array([[1,0], [0, -1j]]))
+
+
+def test_t_matrix():
+    from shor.gates import T
+    g = T(0)
+    
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.allclose(g.to_matrix(), np.array([[1,0], [0, np.exp(1j*np.pi/4)]]))
+
+
+def test_tdg_matrix():
+    from shor.gates import Tdg
+    g = Tdg(0)
+    
+    assert is_square(g.to_matrix())
+    assert is_unitary(g.to_matrix())
+    assert np.allclose(g.to_matrix(), np.array([[1,0], [0, np.exp(-1j*np.pi/4)]]))
+
+
+
+    
