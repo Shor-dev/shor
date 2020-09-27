@@ -2,7 +2,7 @@ import math
 import random
 from typing import List, Tuple
 
-from shor.gates import X, CNOT, CSWAP, H, Rx, QFT
+from shor.gates import X, CNOT, CSWAP, H, Rx, QFT, qModExp
 from shor.layers import Qubits
 from shor.operations import Measure
 from shor.quantum import Circuit
@@ -51,11 +51,17 @@ def find_period(a, N):
     # circuit.add(quantum_amod_15(a))
     # circuit.add(QFT(0, 1, 2, 3))
 
-    circuit.add(Qubits(5))
-    circuit.add(H(0)).add(H(1)).add(H(2)).add(H(3))
-    circuit.add(X(4))
-    circuit.add(quantum_amod_15(a))
-    circuit.add(QFT(3, 2, 1, 0))  # Inverse Quantum Fourier transform
+    circuit.add(Qubits(8))
+    circuit.add(H(0)).add(H(1)).add(H(2)).add(H(3)).add(H(4)).add(H(5)).add(H(6)).add(H(7))
+    circuit.add(qModExp(a, N, 0, 1, 2, 3, 4, 5, 6, 7))
+    # Do QFT
+    # Measure input and output
+    # More..
+
+    
+    # circuit.add(X(4))
+    # circuit.add(quantum_amod_15(a))
+    # circuit.add(QFT(3, 2, 1, 0))  # Inverse Quantum Fourier transform
 
     from shor.providers.ShorSimulator import QSession
     from shor.providers.ShorSimulator import QuantumSimulator
@@ -73,7 +79,7 @@ def quantum_amod_15(a: int) -> Circuit:
         qc.add(CSWAP(4, 3, 2))
         qc.add(CSWAP(4, 2, 1))
         qc.add(CSWAP(4, 1, 0))
-    if a == 4 or a == 11 or a == 14:
+    if a == 4 or a == 11:
         qc.add(CSWAP(4, 2, 0))
         qc.add(CSWAP(4, 3, 1))
         qc.add(CNOT(4, 3))

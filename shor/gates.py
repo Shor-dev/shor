@@ -504,6 +504,35 @@ class CRk(_Gate):
         return np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, np.exp(2*1j*np.pi/2**self.k)]], dtype='complex')
 
 
+class qModExp(_Gate):
+    # map input registers to a set of output registers, where f(x) = a^x mod N
+    symbol = 'qModExp'
+    def __init__(self, a, N, *qubits, **kwargs):
+        self.a = a
+        self.N = N
+        kwargs['dimension'] = 1
+        if not qubits:
+            qubits = [0]
+
+        super().__init__(*qubits, **kwargs)
+
+    
+    # Quick pow with mod
+    def modExp(a, exp, mod):
+        res = 1
+        while exp > 0:
+            if exp % 2 == 1:
+                fx = fx * a % mod
+            a = (a * a) % mod
+            exp = exp >> 1
+        return res
+
+
+    def to_matrix(self) -> np.ndarray:
+        #TODO find out how to put this function into a matrix
+        pass
+
+
 # Aliases
 H = h = Hadamard
 X = x = PauliX
