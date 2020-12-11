@@ -2,7 +2,7 @@
 name = "shor"
 version = "0.0.3"
 description = "Quantum Computing for Humans"
-authors = ["Collin Overbay - shor.dev <shordotdev@gmail.com>"]
+authors = ["Collin Overbay - shor.dev <shordotdev@gmail.com>", "Van Magnan <vanmagnan@gmail.com>"]
 license = "MIT License"
 
 [tool.poetry.dependencies]
