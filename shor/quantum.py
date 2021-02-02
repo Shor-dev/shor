@@ -24,7 +24,7 @@ class QuantumCircuit(object):
 
     def draw(self):
         # Use the qiskit drawing function, may want to replace in future.
-        from shor.providers.IBMQ import to_qiskit_circuit
+        from shor.transpilers.qiskit import to_qiskit_circuit
 
         return to_qiskit_circuit(self).draw()
 
@@ -58,7 +58,7 @@ class QuantumCircuit(object):
 
     def run(self, num_shots: int, provider=None, **kwargs):
         if provider is None:
-            from shor.providers.IBMQ import IBMQProvider
+            from shor.providers.qiskit.IBMQ import IBMQProvider
 
             provider = IBMQProvider()
 

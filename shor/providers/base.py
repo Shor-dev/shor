@@ -65,5 +65,13 @@ class Provider(ABC):
         pass
 
     @abstractmethod
+    def login(self, token: str) -> bool:
+        pass
+
+    @abstractmethod
+    def logout(self):
+        pass
+
+    @abstractmethod
     def run(self, circuit: QuantumCircuit, times: int) -> Job:
         pass

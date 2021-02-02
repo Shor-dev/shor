@@ -1,7 +1,7 @@
 from shor.gates import CNOT, Hadamard, PauliX, PauliZ
 from shor.layers import Qubits
 from shor.operations import Measure
-from shor.providers import IBMQProvider
+from shor.providers.qiskit.base import QiskitProvider
 from shor.quantum import Circuit
 
 
@@ -11,7 +11,7 @@ def test_single_qubit():
     circuit.add(Hadamard(0))
     circuit.add(Measure([0]))
 
-    job = circuit.run(1024, provider=IBMQProvider())
+    job = circuit.run(1024, provider=QiskitProvider())
     result = job.result
     # Accounting for random noise, results won't be exact
     assert result[bin(0)] > 450

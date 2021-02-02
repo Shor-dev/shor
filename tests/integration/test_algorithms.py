@@ -6,7 +6,7 @@ from shor.algorithms.shor import factor, quantum_amod_15
 from shor.gates import CNOT, H
 from shor.layers import Qbits
 from shor.operations import Measure
-from shor.providers import IBMQProvider
+from shor.providers.qiskit.base import QiskitProvider
 from shor.quantum import Circuit, QuantumCircuit
 
 # Seed for tests
@@ -53,8 +53,7 @@ def test_simons():
     Q.add(H(0)).add(H(1)).add(H(2))
     Q.add(Measure(qbits[:3]))  # Doesn't work, partial measurements...
 
-    ibm_provider = IBMQProvider()
-    job = Q.run(1000, provider=ibm_provider)
+    job = Q.run(1000, provider=QiskitProvider())
     result = job.result
 
     print(result)
