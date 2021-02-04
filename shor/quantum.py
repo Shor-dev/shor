@@ -58,9 +58,9 @@ class QuantumCircuit(object):
 
     def run(self, num_shots: int, provider=None, **kwargs):
         if provider is None:
-            from shor.providers.qiskit.IBMQ import IBMQProvider
+            from shor.providers import Aer
 
-            provider = IBMQProvider()
+            provider = Aer()
 
         return provider.run(self, num_shots)
 

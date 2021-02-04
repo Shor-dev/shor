@@ -1,12 +1,12 @@
-from qiskit.providers.aer import Aer
+from qiskit.providers.aer import Aer as QiskitAer
 
 from shor.providers.qiskit.base import QiskitProvider
 
-DEFAULT_BACKEND = Aer.get_backend("qasm_simulator")
+DEFAULT_BACKEND = "qasm_simulator"
 
 
-class AerProvider(QiskitProvider):
+class Aer(QiskitProvider):
     def __init__(self, **config):
         config["backend"] = config.get("backend", DEFAULT_BACKEND)
-        config["provider"] = Aer
+        config["provider"] = QiskitAer
         super().__init__(**config)

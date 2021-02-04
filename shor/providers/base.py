@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
 
+from shor.framework.docstring_utils import _DocExtender
 from shor.quantum import QuantumCircuit
 from shor.utils.qbits import int_from_bit_string, int_to_bit_string
 
@@ -58,20 +59,56 @@ class Job(ABC):
         pass
 
 
-class Provider(ABC):
-    @property
+class Provider(metaclass=_DocExtender):
+    """A Shor Provider connects Shor to quantum computer devices. It supports:
+    - Running shor `QuantumCircuits`
+    - Keeping track of running programs (jobs)
+    - Listing and selecting devices
+    - (Optional) Login and logout
+    """
+
     @abstractmethod
-    def jobs(self) -> List[Job]:
+    def devices(self) -> List[str]:
+        """List available devices (quantum computers or simulators) for provider
+        :return: A list of device names
+        """
         pass
 
     @abstractmethod
-    def login(self, token: str) -> bool:
+    def use_device(self, device: str) -> bool:
+        """Choose active device for provider. See `devices()` to list available devices
+        :param device: the name of the desired quantum computer or similator
+        :return: whether or not operation was successful
+        """
         pass
 
     @abstractmethod
-    def logout(self):
+    def account(self) -> str:
+        """If logged in, show active account credentials"""
+        pass
+
+    @abstractmethod
+    def login(self, token: str, remember: bool = False, **kwargs) -> bool:
+        """Login to provider using API token
+        :param token: API token
+        :param remember: Flag to save credentials to file system for future use
+        :param kwargs: Additional params to pass to the downstream provider login function
+        :return: boolean if login was successful
+        """
+        pass
+
+    @abstractmethod
+    def logout(self, forget: bool = False) -> None:
+        """Logout of provider
+        :param forget: Param to forget saved credentials
+        """
         pass
 
     @abstractmethod
     def run(self, circuit: QuantumCircuit, times: int) -> Job:
+        pass
+
+    @property
+    @abstractmethod
+    def jobs(self) -> List[Job]:
         pass

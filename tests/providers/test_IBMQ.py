@@ -1,10 +1,11 @@
-from qiskit import IBMQ
+import pytest
+from qiskit import IBMQ as QiskitIBMQ
 from qiskit.providers import QiskitBackendNotFoundError
 
 from shor.gates import CNOT, H
 from shor.layers import Qbits
 from shor.operations import Measure
-from shor.providers.qiskit.IBMQ import IBMQProvider
+from shor.providers.qiskit.ibmq import IBMQ
 from shor.quantum import QC
 
 BACKENDS_TO_TEST = [
@@ -20,10 +21,11 @@ BACKENDS_TO_TEST = [
 ]
 
 
+@pytest.mark.skipif(lambda: not QiskitIBMQ.active_account(), reason="Only works if you are logged into IBMQ")
 class TestIBMQProviderAPI:
     @classmethod
     def setup_class(cls):
-        IBMQ.load_account()
+        QiskitIBMQ.load_account()
 
     def test_circuit_on_simulator(self):
         qc = QC()
@@ -32,14 +34,14 @@ class TestIBMQProviderAPI:
         qc.add(CNOT(1, 0))
         qc.add(Measure([0, 1]))
 
-        ibm_provider = IBMQProvider()
+        ibm_provider = IBMQ()
         job = qc.run(1024, ibm_provider)
         result = job.result
         counts = result.counts
         assert counts[0] > 450 < counts[3]
 
     def test_list_backends(self):
-        ibm_provider = IBMQProvider()
+        ibm_provider = IBMQ()
 
         backends = ibm_provider.backends()
         assert len(backends) > 5
@@ -47,7 +49,7 @@ class TestIBMQProviderAPI:
     def test_init_backend(self):
         for backend_name in BACKENDS_TO_TEST:
             try:
-                ibm_provider = IBMQProvider(backend=backend_name)
+                ibm_provider = IBMQ(backend=backend_name)
             except QiskitBackendNotFoundError:
                 raise Exception(f"Backend not found: {backend_name}")
 
