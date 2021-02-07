@@ -4,3 +4,7 @@ class ShorError(Exception):
 
 class CircuitError(ShorError):
     pass
+
+
+class ProviderError(ShorError):
+    pass

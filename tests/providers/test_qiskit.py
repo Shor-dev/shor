@@ -50,15 +50,19 @@ class TestQiskitProviderAPI:
 
         assert result[0] == 1 or result[3] == 1, "One shot, so at least one of the outcomes should happen"
 
-    def test_list_backends(self):
+    def test_list_devices(self):
         ibm_provider = QiskitProvider()
 
-        backends = ibm_provider.backends()
-        print([(b.name(), b.version()) for b in backends])
-        assert len(backends) > 3
+        devices = ibm_provider.devices()
 
-    def test_init_backend(self):
+        assert len(devices) > 3
+
+    def test_init_device(self):
         for backend_name in BACKENDS_TO_TEST:
+            qiskit_provider = QiskitProvider(device=backend_name)
+
+            assert qiskit_provider.device.name() == backend_name
+
             qiskit_provider = QiskitProvider(backend=backend_name)
 
-            assert qiskit_provider.backend.name() == backend_name
+            assert qiskit_provider.device.name() == backend_name

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
 
+from shor.framework.docstring import _DocExtender
 from shor.quantum import QuantumCircuit
 from shor.utils.qbits import int_from_bit_string, int_to_bit_string
 
@@ -58,20 +59,61 @@ class Job(ABC):
         pass
 
 
-class Provider(ABC):
+class Provider(metaclass=_DocExtender):
+    """Shor quantum computing providers support:
+    - Running shor `QuantumCircuits`
+    - Keeping track of running programs (jobs)
+    - Listing and selecting devices
+    - (Optional) Login and logout
+
+    """
+
+    @abstractmethod
+    def devices(self) -> List[str]:
+        """List available devices (quantum computers or simulators) for provider
+        :return: A list of device names
+        """
+        pass
+
+    @abstractmethod
+    def use_device(self, device: str) -> bool:
+        """Choose active device for provider. See `devices()` to list available devices
+        :param device: the name of the desired quantum computer or similator
+        :return: whether or not operation was successful
+        """
+        pass
+
+    @abstractmethod
+    def run(self, circuit: QuantumCircuit, times: int) -> Job:
+        pass
+
     @property
     @abstractmethod
     def jobs(self) -> List[Job]:
         pass
 
+
+class WithLoginMixin(metaclass=_DocExtender):
     @abstractmethod
-    def login(self, token: str) -> bool:
+    def account(self) -> str:
+        """Shows active account credentials, if logged in."""
         pass
 
     @abstractmethod
-    def logout(self):
+    def login(self, token: str, remember: bool = False, **kwargs) -> bool:
+        """Login to provider with API token.
+
+        :param token: API token
+        :param remember: Flag to save credentials to file system for future use
+        :param kwargs: Additional params to pass to the downstream provider login function
+        :return: boolean if login was successful
+        """
         pass
 
     @abstractmethod
-    def run(self, circuit: QuantumCircuit, times: int) -> Job:
+    def logout(self, forget: bool = False) -> None:
+        """Logout of provider.
+
+        :param forget: Param to forget saved credentials
+        """
         pass
