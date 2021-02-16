@@ -6,9 +6,11 @@ from shor.quantum import QC
 
 
 def to_qiskit_circuit(shor_circuit: QC) -> QuantumCircuit:
+    qbit_registers, cbit_registers = shor_circuit.to_registers()
+
     qiskit_circuit = QuantumCircuit(
-        len(shor_circuit.initial_state()),
-        len(shor_circuit.measure_bits()),
+        len(qbit_registers[0]),
+        len(cbit_registers[0]),
     )
 
     for gate_or_op in shor_circuit.to_gates(include_operations=True):

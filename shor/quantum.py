@@ -4,8 +4,10 @@ import numpy as np
 
 from shor.errors import CircuitError
 from shor.gates import _Gate
-from shor.layers import Qbits, _Layer
+from shor.layers import Cbits, Qbits, _Layer
 from shor.operations import Measure, _Operation
+
+# from shor.utils.collections import flatten flatten(qbit_registers) not working
 
 
 class QuantumCircuit(object):
@@ -42,6 +44,23 @@ class QuantumCircuit(object):
 
             gates.extend(operation_or_gates)
         return gates
+
+    def to_registers(self):
+        qbit_registers = []
+        cbit_registers = []
+        for q in filter(lambda l: type(l) == Qbits, self.layers):
+            qbit_registers.append(q._qbits)
+        for c in filter(lambda l: type(l) == Cbits, self.layers):
+            cbit_registers.append(c._cbits)
+
+        if not qbit_registers:
+            raise CircuitError("No qbits found. Qbits must be initialized before adding 'Gate' object")
+
+        if not cbit_registers:
+            cbit_registers = qbit_registers # TODO Here need to add the number of cbits being measured not qbit_registers
+
+
+        return qbit_registers, cbit_registers
 
     def measure_bits(self):
         measure_bits = []
