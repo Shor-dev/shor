@@ -46,19 +46,20 @@ class QuantumCircuit(object):
         return gates
 
     def to_registers(self):
-        qbit_registers = []
-        cbit_registers = []
+        qbit_registers = Qbits(0)
+        cbit_registers = Cbits(0)
         for q in filter(lambda l: type(l) == Qbits, self.layers):
-            qbit_registers.append(q._qbits)
+            qbit_registers.add(q._qbits)
         for c in filter(lambda l: type(l) == Cbits, self.layers):
-            cbit_registers.append(c._cbits)
+            cbit_registers.add(c._cbits)
 
-        if not qbit_registers:
+        if len(qbit_registers._qbits) == 0:
             raise CircuitError("No qbits found. Qbits must be initialized before adding 'Gate' object")
 
-        if not cbit_registers:
-            cbit_registers = qbit_registers # TODO Here need to add the number of cbits being measured not qbit_registers
-
+        if len(cbit_registers._cbits) == 0:
+            cbit_registers._cbits = (
+                qbit_registers._qbits
+            )  # TODO Here need to add the number of cbits being measured not qbit_registers
 
         return qbit_registers, cbit_registers
 

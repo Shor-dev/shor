@@ -46,5 +46,12 @@ class Measure(_Operation):
         super().__init__(**kwargs, axis=axis)
 
 
+class Barrier(_Operation):
+    symbol = "barrier"
+
+    def __init__(self):
+        super().__init__()
+
+
 # Aliases
 M = m = Measure

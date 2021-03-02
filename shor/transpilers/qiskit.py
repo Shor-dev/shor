@@ -9,8 +9,8 @@ def to_qiskit_circuit(shor_circuit: QC) -> QuantumCircuit:
     qbit_registers, cbit_registers = shor_circuit.to_registers()
 
     qiskit_circuit = QuantumCircuit(
-        len(qbit_registers[0]),
-        len(cbit_registers[0]),
+        len(qbit_registers._qbits),
+        len(cbit_registers._cbits),
     )
 
     for gate_or_op in shor_circuit.to_gates(include_operations=True):
@@ -33,6 +33,8 @@ def transpile_gate(qiskit_circuit: QuantumCircuit, shor_layer: _Layer):
             else:
                 for qbit, bit in zip(shor_layer.qbits, shor_layer.bits):
                     qiskit_circuit.measure(qbit, bit)
+        elif symbol == "barrier":
+            qiskit_circuit.barrier()
 
         return
 

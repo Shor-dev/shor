@@ -33,10 +33,12 @@ from shor.gates import (
     Sdg,
     T,
     Tdg,
+    X,
 )
-from shor.layers import Qbits, Qubits
-from shor.operations import Measure
-from shor.quantum import Circuit
+from shor.layers import Cbits, Qbits, Qubits
+from shor.operations import Barrier, Measure
+from shor.providers import QiskitProvider
+from shor.quantum import QC, Circuit
 
 
 def test_ch_integration():
@@ -483,6 +485,7 @@ def test_cz2_int():
     assert result_1["01"] == 1024
     assert result_1["10"] == 0
 
+
 def test_mult_gate_inputs1():
     circuit_1 = Circuit()
     circuit_1.add(Qubits(2))
@@ -513,3 +516,108 @@ def test_quantum_multi_hadamard_partial_measure():
     assert result_1["1000"] == result_1["1001"] == result_1["1010"] == result_1["1011"] == 0
     assert result_1["1100"] == result_1["1101"] == result_1["1110"] == result_1["1111"] == 0
     assert result_1["0100"] == result_1["0101"] == result_1["0110"] == result_1["0111"] == 0
+
+
+def test_grover_search_for_6():
+    grover = Circuit()
+    grover.add(Qubits(3))
+    grover.add(H(range(3)))
+
+    for i in range(2):
+        grover.add(H(2))
+        grover.add(PauliX(0))
+        grover.add(CCNOT(0, 1, 2))
+        grover.add(PauliX(0))
+        grover.add(H(2))
+
+        grover.add(H(range(3)))
+        grover.add(PauliX(range(3)))
+        grover.add(H(2))
+        grover.add(CCNOT(0, 1, 2))
+        grover.add(H(2))
+        grover.add(PauliX(range(3)))
+        grover.add(H(range(3)))
+
+    grover.add(Measure(0, 1, 2))
+    job = grover.run(1024, QiskitProvider(backend="qasm_simulator"))
+    result = job.result
+
+    assert result[6] > 900
+    assert result[0] < 25
+    assert result[1] < 25
+    assert result[2] < 25
+    assert result[3] < 25
+    assert result[4] < 25
+    assert result[5] < 25
+
+
+@pytest.mark.xfail(reason="Don't have capability to multiple qbit classes in one QC and index between them")
+def test_mlt_qbit_mlt_cbit1():
+    qbits1 = Qbits(1)
+    qbits2 = Qbits(1)
+    circ = QC()
+    circ.add(qbits1)
+    circ.add(qbits2)
+    circ.add(H(qbits1))
+    circ.add(X(qbits2[2]))
+    circ.add(Measure(qbits1[0], qbits2[1], Cbits[2]))
+
+    result = X.run(200).result
+    assert result["01"] > 180
+    assert result["11"] > 180
+
+
+def test_mlt_qbit_mlt_cbit3():
+    qbits1 = Qbits(1)
+    qbits2 = Qbits(2)
+    circ = QC()
+    circ.add(qbits1)
+    circ.add(qbits2)
+    circ.add(H(0))
+    circ.add(X(1))
+    circ.add(CH(1, 2))
+    circ.add(Measure(0, 1, output_bits=[0, 1]))
+
+    result = circ.run(1000).result
+    print(result)
+    assert result["10"] > 450
+    assert result["11"] > 450
+
+
+def test_mlt_qbit_mlt_cbit4():
+    qbits1 = Qbits(1)
+    qbits2 = Qbits(3)
+    circ = QC()
+    circ.add(qbits1)
+    circ.add(qbits2)
+    circ.add(Cbits(3))
+    circ.add(H(0))
+    circ.add(X(1))
+    circ.add(CH(1, 2))
+    circ.add(Measure(0, 1, output_bits=[0, 1]))
+
+    result = circ.run(1000).result
+    print(result)
+    assert result["10"] > 450
+    assert result["11"] > 450
+
+
+def test_partial_teleportation():
+    teleportation_circuit = Circuit()
+    teleportation_circuit.add(Qubits(3))
+    teleportation_circuit.add(Cbits(2))  # Should be able to Circuit.add(Qubits(3),Cbits(2))
+    teleportation_circuit.add(X(0))
+    teleportation_circuit.add(H(1))
+    teleportation_circuit.add(CNOT(1, 2))
+    teleportation_circuit.add(Barrier())
+    teleportation_circuit.add(CNOT(0, 1))
+    teleportation_circuit.add(H(0))
+    teleportation_circuit.add(Barrier())
+    teleportation_circuit.add(Measure(0, 1))
+    job = teleportation_circuit.run(1024, QiskitProvider(backend="qasm_simulator"))
+    result = job.result
+
+    assert result["00"] > 225
+    assert result["01"] > 225
+    assert result["10"] > 225
+    assert result["11"] > 225
